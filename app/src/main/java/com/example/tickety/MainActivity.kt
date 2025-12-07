@@ -7,41 +7,34 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.tickety.navigation.AppNavigation
 import com.example.tickety.ui.theme.TicketyTheme
+import androidx.compose.foundation.layout.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
             TicketyTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                AppNavigation()
+
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TicketyTheme {
-        Greeting("Android")
-    }
-}
+//@Composable
+//fun AppRoot() {
+//    Scaffold(
+//        modifier = Modifier.fillMaxSize(),
+//        bottomBar = {
+//            // You will put your BottomBar() here later
+//        }
+//    ) { innerPadding ->
+//        AppNavigation(modifier = Modifier.padding(innerPadding))
+//    }
+//}

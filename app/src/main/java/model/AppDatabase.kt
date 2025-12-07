@@ -8,12 +8,15 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.example.tickety.R
 
-@Database(entities = [Event::class, Booking::class], version = 1, exportSchema = false)
+
+@Database(entities = [Event::class, Booking::class, User::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun eventDao(): EventDao
     abstract fun bookingDao(): BookingDao
+    abstract fun userDao(): UserDao
 
     companion object {
         @Volatile
@@ -58,7 +61,7 @@ abstract class AppDatabase : RoomDatabase() {
                     location = "Cairo Stadium",
                     price = 500.0,
                     description = "Mega concert for the superstar Amr Diab.",
-                    imageUrl = "file:///android_asset/AmrDiabConcert.jpg"
+                    imageUrl = R.drawable.image1
                 ),
                 Event(
                     title = "Cairo International Book Fair",
@@ -66,7 +69,7 @@ abstract class AppDatabase : RoomDatabase() {
                     location = "Egypt Int. Exhibition Center",
                     price = 5.0,
                     description = "The biggest cultural event in the Middle East.",
-                    imageUrl = "file:///android_asset/CairoInternationalBookFair.jpeg"
+                    imageUrl = R.drawable.image2
                 ),
                 Event(
                     title = "Al Ahly vs Zamalek",
@@ -74,7 +77,7 @@ abstract class AppDatabase : RoomDatabase() {
                     location = "Cairo Stadium",
                     price = 100.0,
                     description = "The classic derby match.",
-                    imageUrl = "file:///android_asset/Al-AhlyvsZamalek.jpg"
+                    imageUrl = R.drawable.image3
                 )
             )
             eventDao.insertAll(dummyEvents)

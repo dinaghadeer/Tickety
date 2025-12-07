@@ -11,5 +11,5 @@ data class Event(
     val location: String,
     val price: Double,
     val description: String,
-    val imageUrl: String // Can be a URL or a resource ID
+    val imageUrl: Int // Can be a URL or a resource ID
 )
