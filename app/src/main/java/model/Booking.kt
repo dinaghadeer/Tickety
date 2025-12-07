@@ -19,5 +19,9 @@ data class Booking(
     @PrimaryKey(autoGenerate = true) val bookingId: Int = 0,
     val eventId: Int,
     val quantity: Int,
-    val bookingDate: Long
+    val bookingDate: String,
+
+    val totalPrice: Double,
+    val eventLocation: String,
+    val eventTitle: String
 )
