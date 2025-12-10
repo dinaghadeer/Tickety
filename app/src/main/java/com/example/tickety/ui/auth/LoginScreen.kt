@@ -15,8 +15,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
@@ -46,25 +48,26 @@ fun LoginScreen(navController: NavController, userDao: UserDao) {
             )
     ) {
         // triangle
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val path = Path().apply {
-                moveTo(0f, size.height * 0.2f)
-                lineTo(size.width, 0f)
-                lineTo(size.width, size.height * 0.4f)
-                close()
-            }
-            drawPath(path, color = Color.White.copy(alpha = 0.15f))
-        }
+//        Canvas(modifier = Modifier.fillMaxSize()) {
+//            val path = Path().apply {
+//                moveTo(0f, size.height * 0.2f)
+//                lineTo(size.width, 0f)
+//                lineTo(size.width, size.height * 0.4f)
+//                close()
+//            }
+//            drawPath(path, color = Color.White.copy(alpha = 0.15f))
+//        }
 
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+//            verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(80.dp))
 
             Text("Welcome Back!",
                 modifier = Modifier.align(Alignment.Start),
@@ -90,7 +93,6 @@ fun LoginScreen(navController: NavController, userDao: UserDao) {
                 focusedTextColor = Color.White,
                 unfocusedTextColor = Color.White
             )
-
 
             OutlinedTextField(
                 value = email,

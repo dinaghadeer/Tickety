@@ -18,5 +18,5 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
     object EventDetailsScreen : Screen("EventDetailsScreen", "Event Details",  Icons.Filled.Home)
     object MyBookingsScreen : Screen("MyBookingsScreen", "My Tickets", Icons.Filled.ConfirmationNumber)
 
-    //object AccountScreen : Screen("AccountScreen", "Account",  Icons.Filled.Person)
+    object AccountScreen : Screen("AccountScreen", "Account",  Icons.Filled.Person)
 }

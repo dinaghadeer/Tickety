@@ -4,6 +4,8 @@ package com.example.tickety.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
@@ -17,8 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import model.AppDatabase
 import com.example.tickety.ui.auth.*
-
-
+import model.User
 
 
 @Composable
@@ -29,6 +30,8 @@ fun AppNavigation() {
     // Observe current route
     val navBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentRoute = navBackStackEntry?.destination?.route
+
+    val currentUser = remember { mutableStateOf<User?>(null) }
 
     Scaffold(
         bottomBar = {
@@ -58,9 +61,9 @@ fun AppNavigation() {
                 EventDetailsScreen(navController = navController, event = sampleEvent())
             }
 
-//            composable(NavItems.Account.route) {
-//                AccountScreen(navController = navController)
-//            }
+            composable(Screen.AccountScreen.route) {
+                AccountScreen(navController = navController, currentUser = currentUser)
+            }
 
             composable("splash") {
                 SplashScreen(navController)

@@ -16,8 +16,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import model.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
@@ -46,24 +48,25 @@ fun SignUpScreen(navController: NavController, userDao: UserDao) {
                 )
             )
     ) {
-        // transparent triangle
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val path = Path().apply {
-                moveTo(0f, size.height * 0.2f)
-                lineTo(size.width, 0f)
-                lineTo(size.width, size.height * 0.4f)
-                close()
-            }
-            drawPath(path, color = Color.White.copy(alpha = 0.15f))
-        }
+//        // transparent triangle
+//        Canvas(modifier = Modifier.fillMaxSize()) {
+//            val path = Path().apply {
+//                moveTo(0f, size.height * 0.2f)
+//                lineTo(size.width, 0f)
+//                lineTo(size.width, size.height * 0.4f)
+//                close()
+//            }
+//            drawPath(path, color = Color.White.copy(alpha = 0.15f))
+//        }
 
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+//            verticalArrangement = Arrangement.Center
         ) {
             Spacer(modifier = Modifier.height(48.dp))
 

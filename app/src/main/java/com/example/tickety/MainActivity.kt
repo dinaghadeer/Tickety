@@ -12,6 +12,10 @@ import androidx.compose.ui.Modifier
 import com.example.tickety.navigation.AppNavigation
 import com.example.tickety.ui.theme.TicketyTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import model.AppDatabase
+import model.User
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,8 +24,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TicketyTheme {
+                val currentUser = remember { mutableStateOf<User?>(null) }
                 AppNavigation()
-
             }
         }
     }

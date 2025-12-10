@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import com.example.tickety.R
 
 
+
 @Database(entities = [Event::class, Booking::class, User::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
