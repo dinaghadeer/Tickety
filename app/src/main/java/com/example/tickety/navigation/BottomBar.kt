@@ -23,7 +23,7 @@ fun BottomBar(navController: NavController) {
     val items = listOf(
         Screen.MainScreen,
         Screen.MyBookingsScreen,
-       // Screen.EventDetailsScreen
+        Screen.AccountScreen
     )
 
     NavigationBar(
