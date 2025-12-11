@@ -9,14 +9,16 @@ import kotlinx.coroutines.launch
 import model.Booking
 import model.TicketsRepository
 
-class BookingViewModel(private val repository: TicketsRepository) : ViewModel() {
+class BookingViewModel(
+    private val repository: TicketsRepository, private val userId: Int) : ViewModel() {
 
-    val myBookings: StateFlow<List<Booking>> = repository.myBookings
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
+    val myBookings: StateFlow<List<Booking>> =
+        repository.getAllBookings(userId)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
 
     fun addBooking(booking: Booking) {
         viewModelScope.launch {

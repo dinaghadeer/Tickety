@@ -12,7 +12,7 @@ import com.example.tickety.R
 
 
 
-@Database(entities = [Event::class, Booking::class, User::class], version = 2, exportSchema = false)
+@Database(entities = [Event::class, Booking::class, User::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun eventDao(): EventDao
@@ -30,6 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "easy_tickets_db"
                 )
+                    .fallbackToDestructiveMigration()  // for database updates
                     // Add Callback to populate dummy data on creation
                     .addCallback(AppDatabaseCallback(scope))
                     .build()
@@ -70,7 +71,7 @@ abstract class AppDatabase : RoomDatabase() {
                     location = "Egypt Int. Exhibition Center",
                     price = 5.0,
                     description = "The biggest cultural event in the Middle East.",
-                    imageUrl = R.drawable.image2
+                    imageUrl = R.drawable.image3
                 ),
                 Event(
                     title = "Al Ahly vs Zamalek",
@@ -78,10 +79,18 @@ abstract class AppDatabase : RoomDatabase() {
                     location = "Cairo Stadium",
                     price = 100.0,
                     description = "The classic derby match.",
-                    imageUrl = R.drawable.image3
+                    imageUrl = R.drawable.image2
                 )
             )
             eventDao.insertAll(dummyEvents)
+        }
+        override fun onOpen(db: SupportSQLiteDatabase) {
+            super.onOpen(db)
+            INSTANCE?.let { database ->
+                scope.launch(Dispatchers.IO) {
+                    populateDatabase(database.eventDao())  // inserts dummy data every time app opens
+                }
+            }
         }
     }
 }

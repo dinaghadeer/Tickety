@@ -18,6 +18,8 @@ import androidx.room.PrimaryKey
 data class Booking(
     @PrimaryKey(autoGenerate = true) val bookingId: Int = 0,
     val eventId: Int,
+    val userId: Int,
+
     val quantity: Int,
     val bookingDate: String,
 

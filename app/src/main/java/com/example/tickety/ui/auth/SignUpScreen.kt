@@ -48,25 +48,13 @@ fun SignUpScreen(navController: NavController, userDao: UserDao) {
                 )
             )
     ) {
-//        // transparent triangle
-//        Canvas(modifier = Modifier.fillMaxSize()) {
-//            val path = Path().apply {
-//                moveTo(0f, size.height * 0.2f)
-//                lineTo(size.width, 0f)
-//                lineTo(size.width, size.height * 0.4f)
-//                close()
-//            }
-//            drawPath(path, color = Color.White.copy(alpha = 0.15f))
-//        }
 
-
-        Column(
+       Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.Center
         ) {
             Spacer(modifier = Modifier.height(48.dp))
 
@@ -82,7 +70,6 @@ fun SignUpScreen(navController: NavController, userDao: UserDao) {
             Spacer(modifier = Modifier.height(56.dp))
 
             // Input fields
-
             val textFieldColors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = Color.White.copy(alpha = 0.15f),
                 unfocusedContainerColor = Color.White.copy(alpha = 0.1f),
@@ -230,9 +217,3 @@ fun SignUpScreen(navController: NavController, userDao: UserDao) {
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun SignupScreenPreview() {
-//    SignupScreen()
-//}

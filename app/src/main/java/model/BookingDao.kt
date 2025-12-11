@@ -20,8 +20,8 @@ interface BookingDao {
 
     // Get all bookings
     @Transaction
-    @Query("SELECT * FROM bookings")
-    fun getAllBookings(): Flow<List<Booking>>
+    @Query("SELECT * FROM bookings WHERE userId = :userId")  // bookings by user
+    fun getAllBookings(userId: Int): Flow<List<Booking>>
 
     // Helper function to get specific booking details
     @Query("SELECT * FROM bookings WHERE bookingId = :id")

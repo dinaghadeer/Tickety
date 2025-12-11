@@ -33,9 +33,6 @@ fun BookingCard(
     onDelete: () -> Unit
 ) {
     Card(
-//        colors = CardDefaults.cardColors(
-//            containerColor = Color(0xFF121212) // very dark grey
-//        ),
         modifier = Modifier
             .padding(12.dp)
             .fillMaxWidth(),
@@ -59,11 +56,8 @@ fun BookingCard(
                     text = "${booking.bookingDate} ",
                     style = MaterialTheme.typography.titleMedium,
                     fontSize = 16.sp
-                    //color = Color.DarkGray
                 )
             }
-            //Text(booking.bookingDate, style = MaterialTheme.typography.titleMedium)
-            //Text(booking.eventLocation, style = MaterialTheme.typography.bodyLarge)
 
             Spacer(modifier = Modifier.height(8.dp))
             Row {
@@ -107,6 +101,7 @@ fun BookingCardPreview() {
 
         val sampleBooking = Booking(
             eventId = 1,
+            userId = 1,
             eventTitle = "Summer Music Festival 2024",
             bookingDate = "2024-07-15",
             eventLocation = "Cairo Opera House",

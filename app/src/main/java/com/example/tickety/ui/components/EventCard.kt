@@ -71,17 +71,3 @@ fun EventCard(
         }
     }
 }
-
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun EventCardPreview() {
-//
-//    EventCard(
-//        title = "Amr Diab Concert",
-//        date = "December 20, 2025",
-//        location = "El-Alemin",
-//        price = 299.99,
-//        image = R.drawable.image1,
-//        onClick = {onDetailsClick()}
-//    )
-//}

@@ -15,7 +15,9 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
     object SignUpScreen : Screen("SignUpScreen", "Sign Up", Icons.Filled.Home)
 
     object MainScreen : Screen("EventsScreen", "Home", Icons.Filled.Home)
-    object EventDetailsScreen : Screen("EventDetailsScreen", "Event Details",  Icons.Filled.Home)
+    object EventDetailsScreen : Screen("EventDetailsScreen/{eventId}", "Event Details",  Icons.Filled.Home){
+        fun createRoute(eventId: Int) = "EventDetailsScreen/$eventId"
+    }
     object MyBookingsScreen : Screen("MyBookingsScreen", "My Tickets", Icons.Filled.ConfirmationNumber)
 
     object AccountScreen : Screen("AccountScreen", "Account",  Icons.Filled.Person)
