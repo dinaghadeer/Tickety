@@ -96,7 +96,6 @@ fun AccountScreen(navController: NavController, currentUser: MutableState<User?>
                 .height(50.dp),
             shape = RoundedCornerShape(16.dp),
             colors = ButtonDefaults.buttonColors(
-                //containerColor = Color(0xFF210D41),
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             )

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import model.TicketsRepository
 
-class AppViewModelFactory(private val repository: TicketsRepository) : ViewModelProvider.Factory {
+class AppViewModelFactory(private val repository: TicketsRepository, private val userId: Int) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(EventViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
@@ -12,7 +12,7 @@ class AppViewModelFactory(private val repository: TicketsRepository) : ViewModel
         }
         if (modelClass.isAssignableFrom(BookingViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return BookingViewModel(repository) as T
+            return BookingViewModel(repository,userId) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

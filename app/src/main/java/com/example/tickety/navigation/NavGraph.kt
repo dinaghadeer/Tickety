@@ -8,11 +8,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.*
+import androidx.navigation.navArgument
 import com.example.tickety.ui.screens.SplashScreen
 import com.example.tickety.ui.screens.details.EventDetailsScreen
-import com.example.tickety.ui.screens.details.sampleEvent
 import com.example.tickety.ui.screens.events.EventsScreen
 import com.example.tickety.ui.screens.mybookings.MyBookingsScreen
 import kotlinx.coroutines.CoroutineScope
@@ -23,11 +23,11 @@ import model.User
 
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(userId: Long) {
 
     val navController = rememberNavController()
 
-    // Observe current route
+    // observe current route
     val navBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -35,13 +35,16 @@ fun AppNavigation() {
 
     Scaffold(
         bottomBar = {
-            if (currentRoute != Screen.SplashScreen.route && currentRoute != Screen.LoginScreen.route && currentRoute != Screen.SignUpScreen.route) {
-                BottomBar(navController = navController)
+            if (currentRoute != Screen.SplashScreen.route &&     // if the screen is splash or login or signup don't show the bottom bar
+                currentRoute != Screen.LoginScreen.route &&
+                currentRoute != Screen.SignUpScreen.route
+            ) {
+                BottomBar(navController = navController, userId = userId) // pass userId
             }
         }
     ) { padding ->
 
-        NavHost(
+        NavHost(  // have all screens and their routes
 
             navController = navController,
             startDestination =  "splash",
@@ -53,12 +56,19 @@ fun AppNavigation() {
                 EventsScreen(navController = navController)
             }
 
-            composable(Screen.MyBookingsScreen.route) {
-                MyBookingsScreen(navController = navController)
+            composable(
+                route = "MyBookingsScreen/{userId}",
+                arguments = listOf(navArgument("userId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val userId = backStackEntry.arguments?.getInt("userId") ?: 0
+                MyBookingsScreen(navController = navController, userId = userId)
             }
 
-            composable(Screen.EventDetailsScreen.route) {
-                EventDetailsScreen(navController = navController, event = sampleEvent())
+            composable(Screen.EventDetailsScreen.route, arguments = listOf(navArgument("eventId") { type = NavType.IntType })) {
+                    backStackEntry ->
+                val eventId = backStackEntry.arguments?.getInt("eventId") ?: return@composable
+                val userId = backStackEntry.arguments?.getInt("userId") ?: return@composable
+                EventDetailsScreen(navController = navController, eventId = eventId, userId = userId)
             }
 
             composable(Screen.AccountScreen.route) {

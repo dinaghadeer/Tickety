@@ -1,6 +1,5 @@
 package com.example.tickety.ui.auth
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -23,10 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
 import model.UserDao
+import model.saveCurrentUserId
 
 
 @Composable
@@ -35,6 +36,8 @@ fun LoginScreen(navController: NavController, userDao: UserDao) {
     var password by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()  // it's like a async thread instead of working with database in the main thread, it would freeze and slow the app
+
+    val context = LocalContext.current
 
     Box(   // for the entire screen , makes the screen fill the device
         modifier = Modifier
@@ -47,17 +50,6 @@ fun LoginScreen(navController: NavController, userDao: UserDao) {
                 )
             )
     ) {
-        // triangle
-//        Canvas(modifier = Modifier.fillMaxSize()) {
-//            val path = Path().apply {
-//                moveTo(0f, size.height * 0.2f)
-//                lineTo(size.width, 0f)
-//                lineTo(size.width, size.height * 0.4f)
-//                close()
-//            }
-//            drawPath(path, color = Color.White.copy(alpha = 0.15f))
-//        }
-
 
         Column(
             modifier = Modifier
@@ -65,7 +57,6 @@ fun LoginScreen(navController: NavController, userDao: UserDao) {
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.Center
         ) {
             Spacer(modifier = Modifier.height(80.dp))
 
@@ -94,6 +85,7 @@ fun LoginScreen(navController: NavController, userDao: UserDao) {
                 unfocusedTextColor = Color.White
             )
 
+            //email
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
@@ -107,6 +99,7 @@ fun LoginScreen(navController: NavController, userDao: UserDao) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // password
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
@@ -132,12 +125,16 @@ fun LoginScreen(navController: NavController, userDao: UserDao) {
                     if (navController != null && userDao != null) {
                         scope.launch {  // after checking with the database return to the main thread
                             try {
-                                val user = withContext(Dispatchers.IO) {
+                                val user = withContext(Dispatchers.IO) {  // in backstage do some database work but don't freez the ui
                                     userDao.login(email, sha256(password))
                                 }
                                 if (user != null) {
                                     navController.navigate(Screen.MainScreen.route) {
                                         popUpTo(Screen.LoginScreen.route) { inclusive = true }
+                                    }
+                                    val loggedInUser = userDao.getUserByEmail(email)
+                                    if (loggedInUser != null) {
+                                        saveCurrentUserId(context, loggedInUser.id)
                                     }
                                 } else {
                                     error = "Wrong email or password"
@@ -174,10 +171,5 @@ fun LoginScreen(navController: NavController, userDao: UserDao) {
 
         }
     }
-}
 
-//@Preview(showBackground = true)
-//@Composable
-//fun LoginScreenPreview() {
-//    LoginScreen()
-//}
+}
