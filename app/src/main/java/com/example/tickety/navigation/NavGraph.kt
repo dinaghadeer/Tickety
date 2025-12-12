@@ -1,94 +1,73 @@
 package com.example.tickety.navigation
 
-
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.tickety.ui.screens.SplashScreen
-import com.example.tickety.ui.screens.details.EventDetailsScreen
+import androidx.compose.ui.platform.LocalContext
+import model.AppDatabase
+import com.example.tickety.ui.auth.LoginScreen
+import com.example.tickety.ui.auth.SignUpScreen
 import com.example.tickety.ui.screens.events.EventsScreen
+import com.example.tickety.ui.screens.details.EventDetailsScreen
 import com.example.tickety.ui.screens.mybookings.MyBookingsScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import model.AppDatabase
-import com.example.tickety.ui.auth.*
-import model.User
 
+// تأكدي من تعريف الـ Routes في ملف Screen.kt كالتالي:
+// sealed class Screen(val route: String) {
+//     object LoginScreen : Screen("login_screen")
+//     object SignUpScreen : Screen("signup_screen")
+//     object MainScreen : Screen("home_screen") // دي صفحة الـ Events
+//     object MyBookingsScreen : Screen("my_bookings")
+//     object EventDetailsScreen : Screen("event_details/{eventId}") {
+//         fun createRoute(eventId: Int) = "event_details/$eventId"
+//     }
+// }
 
 @Composable
-fun AppNavigation(userId: Long) {
-
+fun AppNavigation(userId: Long) { // الـ userId هنا ممكن نشيله لو مش محتاجينه في أول تشغيلة، لكن سيبيه مش هيضر
     val navController = rememberNavController()
+    val context = LocalContext.current
 
-    // observe current route
-    val navBackStackEntry = navController.currentBackStackEntryAsState().value
-    val currentRoute = navBackStackEntry?.destination?.route
+    // Database instance for Login/Signup
+    val db = AppDatabase.getDatabase(context, CoroutineScope(Dispatchers.IO))
 
-    val currentUser = remember { mutableStateOf<User?>(null) }
+    NavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
 
-    Scaffold(
-        bottomBar = {
-            if (currentRoute != Screen.SplashScreen.route &&     // if the screen is splash or login or signup don't show the bottom bar
-                currentRoute != Screen.LoginScreen.route &&
-                currentRoute != Screen.SignUpScreen.route
-            ) {
-                BottomBar(navController = navController, userId = userId) // pass userId
-            }
+        // Login Screen
+        composable(route = Screen.LoginScreen.route) {
+            LoginScreen(navController = navController, userDao = db.userDao())
         }
-    ) { padding ->
 
-        NavHost(  // have all screens and their routes
+        // SignUp Screen
+        composable(route = Screen.SignUpScreen.route) {
+            SignUpScreen(navController = navController, userDao = db.userDao())
+        }
 
-            navController = navController,
-            startDestination =  "splash",
-            modifier = Modifier.padding(padding)
+        // Events Screen (Main Home)
+        composable(route = Screen.MainScreen.route) {
+            EventsScreen(navController = navController)
+        }
 
-        ) {
+        // Event Details Screen
+        composable(
+            route = Screen.EventDetailsScreen.route,
+            arguments = listOf(navArgument("eventId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val eventId = backStackEntry.arguments?.getInt("eventId") ?: 0
 
-            composable(Screen.MainScreen.route) {
-                EventsScreen(navController = navController)
-            }
+            // ✅ التعديل هنا: شلنا userId من الأقواس
+            EventDetailsScreen(navController = navController, eventId = eventId)
+        }
 
-            composable(
-                route = "MyBookingsScreen/{userId}",
-                arguments = listOf(navArgument("userId") { type = NavType.IntType })
-            ) { backStackEntry ->
-                val userId = backStackEntry.arguments?.getInt("userId") ?: 0
-                MyBookingsScreen(navController = navController, userId = userId)
-            }
+        // My Bookings Screen
+        composable(route = Screen.MyBookingsScreen.route) {
 
-            composable(Screen.EventDetailsScreen.route, arguments = listOf(navArgument("eventId") { type = NavType.IntType })) {
-                    backStackEntry ->
-                val eventId = backStackEntry.arguments?.getInt("eventId") ?: return@composable
-                val userId = backStackEntry.arguments?.getInt("userId") ?: return@composable
-                EventDetailsScreen(navController = navController, eventId = eventId, userId = userId)
-            }
-
-            composable(Screen.AccountScreen.route) {
-                AccountScreen(navController = navController, currentUser = currentUser)
-            }
-
-            composable("splash") {
-                SplashScreen(navController)
-            }
-
-            composable(Screen.LoginScreen.route) {
-                val db = AppDatabase.getDatabase(LocalContext.current, CoroutineScope(Dispatchers.IO))
-                LoginScreen(navController, db.userDao())
-            }
-
-            composable(Screen.SignUpScreen.route) {
-                val db = AppDatabase.getDatabase(LocalContext.current, CoroutineScope(Dispatchers.IO))
-                SignUpScreen(navController, db.userDao())
-            }
-
+            // ✅ التعديل هنا: شلنا userId من الأقواس
+            MyBookingsScreen(navController = navController)
         }
     }
 }

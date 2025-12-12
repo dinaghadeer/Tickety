@@ -8,23 +8,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import model.Booking
 import com.example.tickety.ui.components.BookingCard
-import com.example.tickety.viewmodel.AppViewModelFactory
-import com.example.tickety.viewmodel.BookingViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import model.AppDatabase
 import model.TicketsRepository
-
+import model.getCurrentUserId // تأكدي من وجود هذا الـ Import
 
 @Composable
-fun MyBookingsScreen(navController: NavController, userId: Int) {
+fun MyBookingsScreen(navController: NavController) { // ❌ تم حذف userId من هنا
 
     val context = LocalContext.current
 
@@ -32,8 +27,11 @@ fun MyBookingsScreen(navController: NavController, userId: Int) {
     val db = remember { AppDatabase.getDatabase(context, CoroutineScope(Dispatchers.IO)) }
     val repo = remember { TicketsRepository(db.eventDao(), db.bookingDao()) }
 
-    // collect current bookings
-    val bookings by repo.getAllBookings(userId).collectAsState(initial = emptyList())
+    // ✅ جلب الـ ID الخاص بالمستخدم الحالي
+    val currentUserId = getCurrentUserId(context)
+
+    // ✅ جلب الحجوزات الخاصة بهذا المستخدم فقط
+    val bookings by repo.getAllBookings(currentUserId).collectAsState(initial = emptyList())
 
     Column(modifier = Modifier.fillMaxSize()) {
 
@@ -65,7 +63,7 @@ fun MyBookingsScreen(navController: NavController, userId: Int) {
                         CoroutineScope(Dispatchers.IO).launch {
                             repo.deleteBooking(booking)
                         }
-                   }
+                    }
                 )
             }
         }
