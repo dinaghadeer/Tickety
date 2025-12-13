@@ -28,9 +28,9 @@ class TicketsRepositoryTest2 {
     fun setup() {
         MockitoAnnotations.openMocks(this)
 
-        // بنعلم الـ Mocks يرجعوا ايه عشان الـ initialization ميعملش مشاكل
+
         whenever(eventDao.getAllEvents()).thenReturn(flowOf(emptyList()))
-        // استخدمنا any() هنا عشان الدالة بتطلب userId واحنا مش مهتمين بالرقم دلوقتي
+
         whenever(bookingDao.getAllBookings(any())).thenReturn(flowOf(emptyList()))
 
         repository = TicketsRepository(eventDao, bookingDao)
@@ -44,14 +44,14 @@ class TicketsRepositoryTest2 {
         // Act
         repository.insertEvent(event)
 
-        // Assert: هل الـ repo ندهت على الـ dao؟
+
         verify(eventDao).insertEvent(event)
     }
 
     @Test
     fun insertBooking_calls_dao_insert() = runTest {
         // Arrange
-        // لازم userId=10 (أو أي رقم) عشان الـ Data Class
+
         val booking = Booking(eventId = 1, userId = 10, quantity = 2, bookingDate = "2024", totalPrice = 20.0, eventLocation = "Loc", eventTitle = "Title")
 
         // Act
