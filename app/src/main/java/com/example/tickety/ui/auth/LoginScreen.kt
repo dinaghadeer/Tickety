@@ -31,7 +31,7 @@ import model.saveCurrentUserId
 
 
 @Composable
-fun LoginScreen(navController: NavController, userDao: UserDao) {
+fun LoginScreen(navController: NavController, userDao: UserDao, currentUser: MutableState<model.User?>) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
@@ -129,6 +129,7 @@ fun LoginScreen(navController: NavController, userDao: UserDao) {
                                     userDao.login(email, sha256(password))
                                 }
                                 if (user != null) {
+                                    currentUser.value = user
                                     navController.navigate(Screen.MainScreen.route) {
                                         popUpTo(Screen.LoginScreen.route) { inclusive = true }
                                     }

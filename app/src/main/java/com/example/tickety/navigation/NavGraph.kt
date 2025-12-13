@@ -81,12 +81,12 @@ fun AppNavigation(userId: Long) {
 
             composable(Screen.LoginScreen.route) {
                 val db = AppDatabase.getDatabase(LocalContext.current, CoroutineScope(Dispatchers.IO))
-                LoginScreen(navController, db.userDao())
+                LoginScreen(navController, db.userDao(), currentUser = currentUser)
             }
 
             composable(Screen.SignUpScreen.route) {
                 val db = AppDatabase.getDatabase(LocalContext.current, CoroutineScope(Dispatchers.IO))
-                SignUpScreen(navController, db.userDao())
+                SignUpScreen(navController, db.userDao(), currentUser = currentUser)
             }
 
         }

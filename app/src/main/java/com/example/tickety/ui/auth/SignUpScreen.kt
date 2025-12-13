@@ -29,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SignUpScreen(navController: NavController, userDao: UserDao) {
+fun SignUpScreen(navController: NavController, userDao: UserDao, currentUser: MutableState<User?>) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -178,7 +178,9 @@ fun SignUpScreen(navController: NavController, userDao: UserDao) {
                                                 password = sha256(password)
                                             )
                                             userDao.insertUser(newUser)
+                                            currentUser.value = newUser
                                         }
+
                                         navController.navigate(Screen.MainScreen.route)
                                     } catch (e: Exception) {
                                         error = "Signup failed: ${e.message}"
