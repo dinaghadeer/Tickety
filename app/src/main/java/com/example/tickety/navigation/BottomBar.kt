@@ -9,10 +9,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.MutableState
+import model.User
 
 
 @Composable
-fun BottomBar(navController: NavController, userId: Long) {
+fun BottomBar(navController: NavController, currentUser: MutableState<User?>) {
 
     val items = listOf(   // list of the bottom bar screens
         Screen.MainScreen,
@@ -29,11 +31,11 @@ fun BottomBar(navController: NavController, userId: Long) {
 
         items.forEach { screen ->
             NavigationBarItem(
-                selected = currentRoute == screen.route,
+                selected = currentRoute?.startsWith(screen.route) == true,
                 onClick = {
                     // if MyBookingsScreen add userId
                     val route = if (screen == Screen.MyBookingsScreen) {
-                        "MyBookingsScreen/$userId"
+                        "MyBookingsScreen/${currentUser.value?.id}"
                     } else {
                         screen.route   // keep the route without passing the userid
                     }

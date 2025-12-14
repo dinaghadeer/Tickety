@@ -23,7 +23,7 @@ import model.User
 
 
 @Composable
-fun AppNavigation(userId: Long) {
+fun AppNavigation() {
 
     val navController = rememberNavController()
 
@@ -39,7 +39,7 @@ fun AppNavigation(userId: Long) {
                 currentRoute != Screen.LoginScreen.route &&
                 currentRoute != Screen.SignUpScreen.route
             ) {
-                BottomBar(navController = navController, userId = userId) // pass userId
+                BottomBar(navController = navController, currentUser = currentUser) // pass userId
             }
         }
     ) { padding ->
@@ -61,14 +61,14 @@ fun AppNavigation(userId: Long) {
                 arguments = listOf(navArgument("userId") { type = NavType.IntType })
             ) { backStackEntry ->
                 val userId = backStackEntry.arguments?.getInt("userId") ?: 0
-                MyBookingsScreen(navController = navController, userId = userId)
+                MyBookingsScreen(navController = navController, currentUser = currentUser)
             }
 
             composable(Screen.EventDetailsScreen.route, arguments = listOf(navArgument("eventId") { type = NavType.IntType })) {
                     backStackEntry ->
                 val eventId = backStackEntry.arguments?.getInt("eventId") ?: return@composable
                 val userId = backStackEntry.arguments?.getInt("userId") ?: return@composable
-                EventDetailsScreen(navController = navController, eventId = eventId, userId = userId)
+                EventDetailsScreen(navController = navController, eventId = eventId, currentUser = currentUser)
             }
 
             composable(Screen.AccountScreen.route) {

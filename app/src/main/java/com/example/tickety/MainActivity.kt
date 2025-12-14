@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TicketyTheme {
-                AppNavigation(userId = loggedInUserId)
+                AppNavigation()
             }
         }
     }

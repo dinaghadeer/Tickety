@@ -22,7 +22,7 @@ class TicketsRepository(private val eventDao: EventDao, private val bookingDao: 
     // --- Booking Operations ---
     //val myBookings: Flow<List<Booking>> = bookingDao.getAllBookings()
     fun getAllBookings(userId: Int): Flow<List<Booking>> {
-        return bookingDao.getAllBookings(userId)
+        return bookingDao.getBookingsForUser(userId)
     }
 
     suspend fun insertBooking(booking: Booking) {
