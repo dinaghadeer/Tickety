@@ -71,7 +71,7 @@ fun MyBookingsScreen(navController: NavController, currentUser: MutableState<Use
                         CoroutineScope(Dispatchers.IO).launch {
                             repo.deleteBooking(booking)
                         }
-                   }
+                    }
                 )
             }
         }

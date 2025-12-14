@@ -25,7 +25,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import com.example.tickety.ui.theme.Purple40
-import com.example.tickety.viewmodel.EventViewModel
+//import com.example.tickety.viewmodel.EventViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import model.AppDatabase
@@ -64,24 +64,24 @@ fun EventsScreen( navController: NavController) {
 
         Row (modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center){
-        // search bar
-        OutlinedTextField(
-            value = searchText,
-            onValueChange = { searchText = it },
-            label = { Text("Search events") },
-            modifier = Modifier
-                .fillMaxWidth(0.90f)   //  90% of screen width
-                .padding(start = 8.dp),
+            // search bar
+            OutlinedTextField(
+                value = searchText,
+                onValueChange = { searchText = it },
+                label = { Text("Search events") },
+                modifier = Modifier
+                    .fillMaxWidth(0.90f)   //  90% of screen width
+                    .padding(start = 8.dp),
 
-            singleLine = true,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Purple40,    // theme purple
-                unfocusedBorderColor = Purple40
-            ),
-            shape = RoundedCornerShape(20.dp),
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search)
-        )
-    }
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Purple40,    // theme purple
+                    unfocusedBorderColor = Purple40
+                ),
+                shape = RoundedCornerShape(20.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search)
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(
