@@ -73,7 +73,6 @@ fun EventDetailsScreen(navController: NavController, eventId: Int, currentUser: 
 
     // collect bookings live
     val bookings by repo.getAllBookings((currentUser.value?.id ?: 0L).toInt()).collectAsState(initial = emptyList())
-
     //val isBooked = bookings.any { it.eventId == event!!.id }
     val isBooked by remember(bookings) {
         derivedStateOf { bookings.any { it.eventId == event!!.id } }
@@ -148,7 +147,7 @@ fun EventDetailsScreen(navController: NavController, eventId: Int, currentUser: 
         // Book button
         Button(
             onClick = {
-
+                println("Current user ID: ${currentUser.value?.id}") // debug line
                 coroutineScope.launch {
                     if (isBooked) {
                         val booking = bookings.find { it.eventId == event!!.id }
