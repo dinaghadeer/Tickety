@@ -25,7 +25,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import com.example.tickety.ui.theme.Purple40
-import com.example.tickety.viewmodel.EventViewModel
+//import com.example.tickety.viewmodel.EventViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import model.AppDatabase
