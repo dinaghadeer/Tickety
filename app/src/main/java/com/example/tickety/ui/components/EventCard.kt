@@ -101,7 +101,7 @@ fun EventCard(
                             .size(48.dp)
                             .border(
                                 width = 2.dp,
-                                color = MaterialTheme.colorScheme.primary, // purple
+                                color = MaterialTheme.colorScheme.primary,
                                 shape = CircleShape
                             )
                             .background(Color.White, CircleShape)
