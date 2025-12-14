@@ -16,7 +16,20 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.tickety.R
 import com.example.tickety.navigation.Screen
-import model.Event  //????????????
+import model.Event
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.border
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Link
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+
 
 
 @Composable
@@ -28,8 +41,9 @@ fun EventCard(
     price: Double,
     image: Int, // drawable resource
     event: Event,
-    onDetailsClick: () -> Unit
+    onDetailsClick: () -> Unit,
 ) {
+    val context = LocalContext.current
     val navController = rememberNavController()
     Card(
         modifier = Modifier
@@ -61,11 +75,43 @@ fun EventCard(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Button(
-                    onClick = { onDetailsClick() },
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Details")
+
+                    Button(
+                        onClick = { onDetailsClick() },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text("Details")
+                    }
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    IconButton(
+                        onClick = {
+                            val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://amrdiab.net/") // implicit intent
+                            )
+                            context.startActivity(intent)
+                        },
+                        modifier = Modifier
+                            .size(48.dp)
+                            .border(
+                                width = 2.dp,
+                                color = MaterialTheme.colorScheme.primary, // purple
+                                shape = CircleShape
+                            )
+                            .background(Color.White, CircleShape)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Link,
+                            contentDescription = "Open link",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             }
         }
