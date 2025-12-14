@@ -32,8 +32,15 @@ fun MyBookingsScreen(navController: NavController, currentUser: MutableState<Use
     val db = remember { AppDatabase.getDatabase(context, CoroutineScope(Dispatchers.IO)) }
     val repo = remember { TicketsRepository(db.eventDao(), db.bookingDao()) }
 
+    val user = currentUser.value
+
     // collect current bookings
-    val bookings by repo.getAllBookings((currentUser.value?.id ?: 0L).toInt()).collectAsState(initial = emptyList())
+    val bookingsState = user?.let {
+        repo.getAllBookings(it.id.toInt())
+            .collectAsState(initial = emptyList())
+    }
+    val bookings = bookingsState?.value ?: emptyList()
+
     // debug line
     LaunchedEffect(bookings) {
         println("Bookings list for user ${currentUser.value?.id}: $bookings")

@@ -72,8 +72,19 @@ fun EventDetailsScreen(navController: NavController, eventId: Int, currentUser: 
     }
 
     // collect bookings live
-    val bookings by repo.getAllBookings((currentUser.value?.id ?: 0L).toInt()).collectAsState(initial = emptyList())
+    val user = currentUser.value
+    val bookingsState = user?.let {
+        repo.getAllBookings(it.id.toInt())
+            .collectAsState(initial = emptyList())
+    }
+
+    val bookings = bookingsState?.value ?: emptyList()
+
+
+
+    //val bookings by repo.getAllBookings((currentUser.value?.id ?: 0L).toInt()).collectAsState(initial = emptyList())
     //val isBooked = bookings.any { it.eventId == event!!.id }
+
     val isBooked by remember(bookings) {
         derivedStateOf { bookings.any { it.eventId == event!!.id } }
     }
@@ -144,6 +155,8 @@ fun EventDetailsScreen(navController: NavController, eventId: Int, currentUser: 
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        val user = currentUser.value ?: return
+
         // Book button
         Button(
             onClick = {
@@ -156,7 +169,7 @@ fun EventDetailsScreen(navController: NavController, eventId: Int, currentUser: 
                         repo.insertBooking(
                             Booking(
                                 eventId = event!!.id,
-                                userId = currentUser.value?.id ?: 0,
+                                userId = user.id,
                                 quantity = 1,
                                 bookingDate = "2025-12-11",
                                 totalPrice = event!!.price,
