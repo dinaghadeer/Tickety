@@ -51,55 +51,29 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
-import com.example.tickety.viewmodel.EventViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import model.AppDatabase
-import model.Booking
-import model.TicketsRepository
 
 
 @Composable
-fun EventDetailsScreen(navController: NavController, eventId: Int, userId: Int) {
+fun EventDetailsScreen(navController: NavController, event: Event) {
 
-    val context = LocalContext.current
-    val db = remember { AppDatabase.getDatabase(context, CoroutineScope(Dispatchers.IO)) }
-    val repo = remember { TicketsRepository(db.eventDao(), db.bookingDao()) }
-
-    var event by remember { mutableStateOf<Event?>(null) }
-
-    // Load event from database
-    LaunchedEffect(eventId) {
-        event = repo.getEventById(eventId)
-    }
-
-    if (event == null) {
-        // show loading indicator while fetching
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
-        }
-        return
-    }
-
-    // collect bookings live
-    val bookings by repo.getAllBookings(userId).collectAsState(initial = emptyList())
-    val isBooked = bookings.any { it.eventId == event!!.id }
-
-    val coroutineScope = rememberCoroutineScope()
+    // Local UI state
+    var isBooked by remember { mutableStateOf(false) }
+//    var isFavorite by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
+//            .background(
+//                color = Color(0xFFF5F5F5),
+//                shape = RoundedCornerShape(20.dp) // Rounded corners
+//            )
+//
             .padding(16.dp)
 
     ) {
@@ -111,79 +85,147 @@ fun EventDetailsScreen(navController: NavController, eventId: Int, userId: Int) 
         Spacer(modifier = Modifier.height(8.dp))
 
         Image(
-            painter = painterResource(id = event!!.imageUrl),
+            painter = painterResource(id = event.imageUrl),
             contentDescription = "Event Image",
             modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp)
-                .clip(RoundedCornerShape(12.dp)),
+                .height(250.dp) // image size
+                .clip(RoundedCornerShape(12.dp)), // Rounded corners
             contentScale = ContentScale.Crop
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = event!!.title,
+            text = "${event.title} ",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
 
         Spacer(modifier = Modifier.height(12.dp))
-
         Row {
-            Icon(Icons.Default.DateRange, contentDescription = "Date", tint = Color(0xFF6650a4), modifier = Modifier.size(28.dp))
+            Icon(
+                imageVector = Icons.Default.DateRange,
+                contentDescription = "Date",
+                tint = Color(0xFF6650a4),
+                modifier = Modifier.size(28.dp)
+            )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(event!!.date, style = MaterialTheme.typography.headlineSmall, fontSize = 16.sp)
+            Text(
+                text = "${event.date} ",
+                style = MaterialTheme.typography.headlineSmall,
+                fontSize = 16.sp
+                //color = Color.DarkGray
+            )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Row {
-            Icon(Icons.Default.LocationOn, contentDescription = "Location", tint = Color(0xFF6650a4), modifier = Modifier.size(28.dp))
+            Icon(
+                imageVector = Icons.Default.LocationOn,
+                contentDescription = "Location",
+                tint = Color(0xFF6650a4),
+                modifier = Modifier.size(28.dp)
+            )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(event!!.location, style = MaterialTheme.typography.headlineSmall, fontSize = 16.sp)
+            Text(
+                text = "${event.location} ",
+                style = MaterialTheme.typography.headlineSmall,
+                fontSize = 16.sp
+            )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Row {
-            Icon(Icons.Default.CurrencyPound, contentDescription = "Price", tint = Color(0xFF6650a4), modifier = Modifier.size(28.dp))
+            Icon(
+                imageVector = Icons.Default.CurrencyPound,
+                contentDescription = "Price",
+                tint = Color(0xFF6650a4),
+                modifier = Modifier.size(28.dp)
+            )
             Spacer(modifier = Modifier.width(8.dp))
-            Text("${event!!.price} EGP", style = MaterialTheme.typography.headlineSmall, fontSize = 16.sp)
+            Text(
+                text = "${event.price}  EGP",
+                style = MaterialTheme.typography.headlineSmall,
+                fontSize = 16.sp
+            )
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Text("Description:", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-        Text(event!!.description, style = MaterialTheme.typography.bodyLarge, fontSize = 16.sp)
+        Text(
+            text = "Description: ",
+            style = MaterialTheme.typography.headlineSmall ,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp
+        )
+
+        Text(
+            text = "${event.description} ",
+            style = MaterialTheme.typography.bodyLarge,
+            fontSize = 16.sp
+            //color = Color.DarkGray
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 
         // Book button
         Button(
-            onClick = {
-                coroutineScope.launch {
-                    if (isBooked) {
-                        val booking = bookings.find { it.eventId == event!!.id }
-                        booking?.let { repo.deleteBooking(it) }
-                    } else {
-                        repo.insertBooking(
-                            Booking(
-                                eventId = event!!.id,
-                                userId = userId,
-                                quantity = 1,
-                                bookingDate = "2025-12-11",
-                                totalPrice = event!!.price,
-                                eventLocation = event!!.location,
-                                eventTitle = event!!.title
-                            )
-                        )
-                    }
-                }
-            },
+            onClick = { isBooked = !isBooked },
             modifier = Modifier.fillMaxWidth().height(48.dp)
         ) {
-            Text(if (isBooked) "Cancel Booking" else "Book Event")
+            Text(if (isBooked) "Cancel Booking" else "Book Event", style = MaterialTheme.typography.bodyLarge,
+                fontSize = 16.sp)
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
     }
+
+    // Favorite button
+//        Button(
+//            onClick = { isFavorite = !isFavorite },
+//            modifier = Modifier.fillMaxWidth()
+//        ) {
+//            Text(if (isFavorite) "Remove from Favorites" else "Add to Favorites")
+//        }
+
+    Spacer(modifier = Modifier.height(24.dp))
+
+    if (isBooked) {
+        Text(
+            text = "You have booked this event.",
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+
+//        if (isFavorite) {
+//            Text(
+//                text = "This event is in your favorites.",
+//                textAlign = TextAlign.Center,
+//                style = MaterialTheme.typography.bodyLarge,
+//                modifier = Modifier.fillMaxWidth()
+//            )
+//        }
+}
+
+// Sample event for preview
+fun sampleEvent() = Event(
+    id = 1,
+    title = "Amr Diab Concert",
+    date = "12 Dec 2025",
+    location = "El-Alemin",
+    price = 200.0,
+    description = "An amazing concert you shouldn't miss!",
+    imageUrl = R.drawable.image1
+)
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewEventDetailsScreen() {
+    val navController = rememberNavController()
+    EventDetailsScreen(navController = navController ,event = sampleEvent())
 }

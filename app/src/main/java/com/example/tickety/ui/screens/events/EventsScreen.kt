@@ -23,33 +23,28 @@ import androidx.compose.runtime.*
 import androidx.compose.material3.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import com.example.tickety.ui.theme.Purple40
-import com.example.tickety.viewmodel.EventViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import model.AppDatabase
-import model.TicketsRepository
 
 
 @Composable
-fun EventsScreen( navController: NavController) {
+fun EventsScreen( navController: NavController ) {
 
 
-    val context = LocalContext.current
-    val db = remember { AppDatabase.getDatabase(context, CoroutineScope(Dispatchers.IO)) }
-    val repo = remember { TicketsRepository(db.eventDao(), db.bookingDao()) }
+    val events = listOf(
+        Event(1, "Music Night", "12 Dec - 8 PM", "Cairo Opera House", 500.0, "Music", R.drawable.image1),
+        Event(2, "Tech Summit", "20 Dec - 10 AM", "Smart Village", 700.0, "Tech", R.drawable.image2),
+        Event(3, "Food Festival", "5 Jan - 5 PM", "Al Rehab Park", 200.0, "Food", R.drawable.image3)
+    )
 
-    // collect events from database
-    val events by repo.allEvents.collectAsState(initial = emptyList())
-
+    // Search text
     var searchText by remember { mutableStateOf("") }
 
-    // filter events
+    // Filter events
     val filteredEvents = events.filter { event ->
         event.title.contains(searchText, ignoreCase = true) ||
                 event.location.contains(searchText, ignoreCase = true)
     }
+
 
     Column(modifier = Modifier.fillMaxSize()) {
         Row {
@@ -64,41 +59,30 @@ fun EventsScreen( navController: NavController) {
 
         Row (modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center){
-        // search bar
-        OutlinedTextField(
-            value = searchText,
-            onValueChange = { searchText = it },
-            label = { Text("Search events") },
-            modifier = Modifier
-                .fillMaxWidth(0.90f)   //  90% of screen width
-                .padding(start = 8.dp),
+            // Search bar
+            OutlinedTextField(
+                value = searchText,
+                onValueChange = { searchText = it },
+                label = { Text("Search events") },
+                modifier = Modifier
+                    .fillMaxWidth(0.90f)   //  90% of screen width
+                    .padding(start = 8.dp),
 
-            singleLine = true,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Purple40,    // theme purple
-                unfocusedBorderColor = Purple40
-            ),
-            shape = RoundedCornerShape(20.dp),
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search)
-        )
-    }
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Purple40,    // your theme purple
+                    unfocusedBorderColor = Purple40
+                ),
+                shape = RoundedCornerShape(20.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search)
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(
             contentPadding = PaddingValues(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            if (filteredEvents.isEmpty()) {
-                item {
-                    Text(
-                        text = "No events found",
-                        modifier = Modifier.fillMaxWidth().padding(24.dp),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
-            }
-
             items(filteredEvents) { event ->
                 EventCard(
                     event = event,
@@ -108,10 +92,18 @@ fun EventsScreen( navController: NavController) {
                     price = event.price,
                     image = event.imageUrl,
                     onDetailsClick = {
-                        navController.navigate(Screen.EventDetailsScreen.createRoute(event.id))
+                        navController.navigate(Screen.EventDetailsScreen.route)
                     }
                 )
             }
         }
     }
+
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun PreviewEventsScreen() {
+    val navController = rememberNavController()
+    EventsScreen(navController = navController)
 }
