@@ -14,8 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import model.Booking
 import com.example.tickety.ui.components.BookingCard
-import com.example.tickety.viewmodel.AppViewModelFactory
-import com.example.tickety.viewmodel.BookingViewModel
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
