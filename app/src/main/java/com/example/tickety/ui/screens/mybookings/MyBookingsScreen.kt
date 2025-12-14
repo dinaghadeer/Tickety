@@ -14,8 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import model.Booking
 import com.example.tickety.ui.components.BookingCard
-import com.example.tickety.viewmodel.AppViewModelFactory
-import com.example.tickety.viewmodel.BookingViewModel
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,10 +35,7 @@ fun MyBookingsScreen(navController: NavController, currentUser: MutableState<Use
 
     // collect current bookings
     val bookings by repo.getAllBookings((currentUser.value?.id ?: 0L).toInt()).collectAsState(initial = emptyList())
-    // debug line
-    LaunchedEffect(bookings) {
-        println("Bookings list for user ${currentUser.value?.id}: $bookings")
-    }
+
 
     Column(modifier = Modifier.fillMaxSize()) {
 

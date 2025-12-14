@@ -7,6 +7,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.tickety.navigation.AppNavigation
 import com.example.tickety.ui.theme.TicketyTheme
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.analytics
+import com.google.firebase.initialize
 
 class MainActivity : ComponentActivity() {
 
@@ -14,8 +17,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val loggedInUserId: Long = sharedPreferences.getLong("logged_in_user_id", 0L)
+        Firebase.initialize(this)
+        val analytics = Firebase.analytics
+
 
         setContent {
             TicketyTheme {
